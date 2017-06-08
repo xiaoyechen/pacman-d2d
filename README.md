@@ -1,2 +1,6 @@
-# pacman-d2d
-Simple Pacman path-finding game, drawn with Direct2D
+(In progress)
+
+
+
+References:
+game map from https://www.hackerrank.com/challenges/pacman-astar
