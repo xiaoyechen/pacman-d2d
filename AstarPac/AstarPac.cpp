@@ -77,34 +77,6 @@ ATOM AstarPac::RegClass()
 }
 
 //
-//   FUNCTION: InitInstance(HINSTANCE, int)
-//
-//   PURPOSE: Saves instance handle and creates main window
-//
-//   COMMENTS:
-//
-//        In this function, we save the instance handle in a global variable and
-//        create and display the main program window.
-//
-/*BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
-{
-   hInst = hInstance; // Store instance handle in our global variable
-
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-
-   if (!hWnd)
-   {
-      return FALSE;
-   }
-
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
-
-   return TRUE;
-}
-*/
-//
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
 //  PURPOSE:  Processes messages for the main window.
@@ -221,7 +193,8 @@ AstarPac::AstarPac()
   m_pDirect2dFactory(nullptr),
   m_pRenderTarget(nullptr),
   m_pLightSlateGrayBrush(nullptr),
-  m_pOrangeRedBrush(nullptr)
+  m_pOrangeRedBrush(nullptr),
+  m_pGreenBrush(nullptr)
 {
   m_pgame = new PacmanGame("grid.txt");
 }
@@ -233,6 +206,8 @@ AstarPac::~AstarPac()
   SafeRelease(m_pRenderTarget);
   SafeRelease(m_pLightSlateGrayBrush);
   SafeRelease(m_pOrangeRedBrush);
+  SafeRelease(m_pGreenBrush);
+
   SafeRelease(m_pgame);
 }
 
@@ -331,8 +306,13 @@ HRESULT AstarPac::CreateDeviceResources()
 
     if (SUCCEEDED(hr))
     {
-      //create blue brush
+      //create a red brush
       hr = m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::OrangeRed), &m_pOrangeRedBrush);
+    }
+
+    if (SUCCEEDED(hr))
+    {
+      hr = m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::ForestGreen), &m_pGreenBrush);
     }
   }
   return hr;
@@ -393,6 +373,7 @@ void AstarPac::DiscardDeviceResources()
   SafeRelease(m_pRenderTarget);
   SafeRelease(m_pLightSlateGrayBrush);
   SafeRelease(m_pOrangeRedBrush);
+  SafeRelease(m_pGreenBrush);
 }
 
 HRESULT AstarPac::OnRender()
@@ -418,6 +399,14 @@ HRESULT AstarPac::OnRender()
       int width = static_cast<int>(rtSize.width);
       int height = static_cast<int>(rtSize.height);
 
+      // draw path
+      std::list<std::pair<int, int>>* path = m_pgame->GetPath();
+
+      for (auto it = path->begin(); it != path->end(); ++it)
+      {
+        D2D1_RECT_F rect1 = D2D1::RectF(it->second *CELL_DIM, it->first*CELL_DIM, (it->second + 1)*CELL_DIM, (it->first + 1)*CELL_DIM);
+        m_pRenderTarget->FillRectangle(&rect1, m_pGreenBrush);
+      }
 
       // draw map
       for (int y = 0; y < m_pgame->GetHeight(); ++y)
@@ -461,6 +450,8 @@ HRESULT AstarPac::OnRender()
           }
         }
       }
+
+
       /*
       for (int x = 0; x < width; x += 10)
       {

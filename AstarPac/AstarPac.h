@@ -31,8 +31,9 @@ private:
   ID2D1Factory* m_pDirect2dFactory;
   IWICImagingFactory* m_pIWICFactory;
   ID2D1HwndRenderTarget* m_pRenderTarget;
-  ID2D1SolidColorBrush* m_pLightSlateGrayBrush;
-  ID2D1SolidColorBrush* m_pOrangeRedBrush;
+  ID2D1SolidColorBrush* m_pLightSlateGrayBrush; // wall color
+  ID2D1SolidColorBrush* m_pOrangeRedBrush;      // food color
+  ID2D1SolidColorBrush* m_pGreenBrush;          // path color
   ID2D1Bitmap *m_pD2DBitmap;
   //ID2D1ImageSourceFromWic *m_pD2DImageSource;
 

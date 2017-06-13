@@ -10,29 +10,6 @@
 #define SYMBOL_WALL '%'
 #define SYMBOL_PATH '-'
 
-class PacmanGame
-{
-public:
-  PacmanGame(char *mapfile);
-  virtual ~PacmanGame();
-  void Release();
-
-  void astar();
-
-  int GetWidth() const;
-  int GetHeight() const;
-  char operator() (int i, int j) const;
-  char & operator() (int i, int j);
-private:
-  int m_width, m_height;
-  char *m_grid;
-  std::pair<int, int> m_pacman;
-  std::pair<int, int> m_food;
-  std::list<std::pair<int,int>> m_steps;
-  bool IsPath(const char c);
-  void SetPath(m_type &path);
-};
-
 class Compare {
   bool reverse;
 public:
@@ -48,3 +25,29 @@ public:
 
 typedef std::map<std::pair<int, int>, std::pair<int, int>> m_type;
 typedef std::priority_queue<std::tuple<int, int, int>, std::vector<std::tuple<int, int, int>>, Compare> pq_type;
+
+
+class PacmanGame
+{
+public:
+  PacmanGame(char *mapfile);
+  virtual ~PacmanGame();
+  void Release();
+
+  std::list<std::pair<int, int>>* GetPath();
+
+  int GetWidth() const;
+  int GetHeight() const;
+  char operator() (int i, int j) const;
+  char & operator() (int i, int j);
+private:
+  int m_width, m_height;
+  char *m_grid;
+  std::pair<int, int> m_pacman;
+  std::pair<int, int> m_food;
+  std::list<std::pair<int,int>> m_steps;
+
+  void AStar();
+  bool IsPath(const char c);
+  void SetPath(m_type &path);
+};

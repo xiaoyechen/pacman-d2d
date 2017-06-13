@@ -19,10 +19,17 @@ PacmanGame::PacmanGame(char * mapfile)
     for (int j = 0; j < m_width; ++j)
     {
       inf >> (*this)(i, j);
+
+      if ((*this)(i, j) == SYMBOL_PACMAN)
+        m_pacman = std::make_pair(i, j);
+      if ((*this)(i, j) == SYMBOL_FOOD)
+        m_food = std::make_pair(i, j);
     }
   }
 
   inf.close();
+
+  AStar();
 }
 
 PacmanGame::~PacmanGame()
@@ -37,8 +44,13 @@ void PacmanGame::Release()
   m_width = 0;
 }
 
+std::list<std::pair<int, int>>* PacmanGame::GetPath()
+{
+  return &m_steps;
+}
 
-void PacmanGame::astar()
+
+void PacmanGame::AStar()
 {
   m_type parents({ { m_pacman, m_pacman } });
 
