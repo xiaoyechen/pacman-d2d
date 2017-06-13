@@ -3,6 +3,8 @@
 #include "resource.h"
 #include "PacmanGame.h"
 
+#define CELL_DIM 15
+
 const float DEFAULT_DPI = 96.f;
 
 class AstarPac 
